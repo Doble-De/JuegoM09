@@ -9,7 +9,6 @@ public class Main {
 
         conecta4.conexion();
         tablero.inicializarTablero();
-        tablero.mostrarTablero();
         while (true){
             conecta4.ponerficha();
         }

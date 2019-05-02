@@ -33,7 +33,7 @@ public class Servidor {
         if (player1 && player2){
             clienteIP = packet.getAddress();
             clientPort = packet.getPort();
-            if (clienteIP.equals(client1ip)){
+            if (clienteIP.equals(client1ip) && clientPort == port1){
                 clientPort = port2;
                 clienteIP = client2ip;
             }else {
@@ -73,6 +73,7 @@ public class Servidor {
                     packet = new DatagramPacket(enviar, enviar.length, client2ip, puertoc);
                     socket.send(packet);
                     player2 = true;
+                    port2 = puertoc;
                     System.out.println("J2 puerto " + puertoc);
                 }
             }

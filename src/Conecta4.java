@@ -10,59 +10,49 @@ public class Conecta4 {
     Tablero tablero;
     int turno, rival ,columna;
     Scanner scanner = new Scanner(System.in);
-    boolean ganador, turnojugada;
+    boolean ganador, movido;
     Cliente cliente;
 
     public Conecta4(){
         tablero = new Tablero();
-        turnojugada = true;
+        movido = false;
         cliente = new Cliente();
         //turno = (int) Math.floor(Math.random() * 2) + 1;
     }
 
     public void ponerficha() throws IOException {
-        if (turnojugada){
-            turnojugada = false;
-            System.out.println("Turno del jugador1");
+            tablero.mostrarTablero();
+            if (turno == tablero.AMARILLO){
+                esperarjugada();
+                tablero.mostrarTablero();
+            }
+            System.out.println("Turno del jugador"+turno);
+            while (!movido) {
             System.out.println("Indica la columna donde quieres tirar la ficha");
             columna = scanner.nextInt()-1;
-            if (columna <=6 && columna >=0) {
-                cliente.runClient(columna);
-                tablero.añadirFicha(columna, turno);
-                tablero.mostrarTablero();
-                turno = 2;
+
+                if (columna <= 6 && columna >= 0) {
+                    tablero.añadirFicha(columna, turno);
+                    tablero.mostrarTablero();
+                    cliente.runClient(columna);
+                    movido = true;
+                } else {
+                    System.out.println("Columna no valida, del 1 al 7");
+                }
             }
-            else{
-                System.out.println("Columna no valida, del 1 al 7");
+            if (turno == tablero.AMARILLO){
+                ganador = tablero.ganadorAmarillo();
+            }else if (turno == tablero.ROJO){
+                ganador = tablero.ganadorRojo();
             }
-            ganador = tablero.ganadorRojo();
 
             if (ganador){
                 System.out.println("Ha ganado el j1 chao");
                 exit();
             }
-        }
-        else if(!turnojugada){
-            turnojugada = true;
-            System.out.println("Turno del jugador2");
-            System.out.println("Indica la columna donde quieres tirar la ficha");
-            columna = scanner.nextInt()-1;
-            if (columna <=6 && columna >=0) {
-                cliente.runClient(columna);
-                tablero.añadirFicha(columna, turno);
-                tablero.mostrarTablero();
-                turno = 1;
-            }
-            else{
-                System.out.println("Columna no valida, del 1 al 7");
-            }
-
-            ganador = tablero.ganadorAmarillo();
-
-            if (ganador){
-                System.out.println("Ha ganado el j2 chao");
-                exit();
-            }
+            movido = false;
+        if (turno == tablero.ROJO){
+            esperarjugada();
         }
     }
 
@@ -79,5 +69,13 @@ public class Conecta4 {
             System.out.println("Eres el jugador 2, juegas con las piezas amarillas");
         }
 
+    }
+
+    private void esperarjugada() throws IOException {
+        int jugada;
+
+        jugada = Integer.parseInt(cliente.getJugada());
+
+        tablero.añadirFicha(jugada, rival);
     }
 }
